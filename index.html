@@ -310,14 +310,21 @@
     }
     @media (max-width: 768px) {
       .phoenix-main {
-        padding: 88px 4% 40px 4%;
+        padding: 96px 4% 40px 4%;
       }
       .phoenix-header {
         padding: 0 4%;
-        height: 60px;
+        height: 64px;
       }
       .phoenix-logo {
         font-size: 1.5rem;
+      }
+      .phoenix-nav {
+        gap: 1rem;
+      }
+      .nav-item {
+        font-size: 14px;
+        padding: 6px 12px;
       }
       .phoenix-hero h1 {
         font-size: 2.4rem;
@@ -330,16 +337,16 @@
         gap: 0;
       }
       #search-input {
-        border-radius: 4px 4px 0 0;
-        border-right: 2px solid #333333;
+        border-radius: 12px 12px 0 0;
+        border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
       #search-button {
-        border-radius: 0 0 4px 4px;
+        border-radius: 0 0 12px 12px;
       }
-      .phoenix-hero, .phoenix-info-section, .phoenix-video-section, .phoenix-results {
+      .phoenix-hero, .phoenix-info-section, .phoenix-video-section, .phoenix-results, .history-section {
         padding: 24px 16px;
       }
-      .phoenix-features {
+      .phoenix-features, .history-grid {
         grid-template-columns: 1fr;
         gap: 16px;
       }
@@ -348,6 +355,11 @@
       }
       .phoenix-info-section {
         padding: 32px 16px;
+      }
+      .history-header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
       }
     }
   </style>
