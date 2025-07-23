@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="shortcut icon" href="icons/icon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6C63FF" />
+  <meta name="robots" content="index, follow">
+  <meta property="og:image" content="/og.jpg"/>
+  <meta name="description"
+    content="Discover and stream your favorite movies and TV shows with Phoenix - a modern, open source content search and watch website. Enjoy unlimited access to a vast library of content for free.">
+  <title>Phoenix</title>
+  <link rel="stylesheet" href="style.min.css">
+  <link rel="stylesheet" href="center-atom.min.css">
+  <link rel="stylesheet" href="phoenix-redesign.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #232526 0%, #414345 100%);
+      color: #fff;
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .phoenix-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3vw;
+      background: rgba(30, 30, 40, 0.95);
+      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.12);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .phoenix-logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ff512f;
+    }
+    .phoenix-logo img {
+      height: 56px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #0005;
+    }
+    .phoenix-nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 2rem;
+      font-size: 1.1rem;
+      transition: color 0.2s;
+    }
+    .phoenix-nav a:hover {
+      color: #ff512f;
+    }
+    .phoenix-main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1rem 1rem 1rem;
+    }
+    .phoenix-hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding: 2.5rem 1rem 2rem 1rem;
+      background: rgba(44, 44, 60, 0.85);
+      border-radius: 2rem;
+      box-shadow: 0 4px 32px 0 #0003;
+    }
+    .phoenix-gradient {
+      background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+    }
+    .phoenix-tagline {
+      font-size: 1.5rem;
+      color: #bdbdbd;
+      margin-top: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .phoenix-search-container {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+    #search-input {
+      width: 320px;
+      padding: 0.8rem 1.2rem;
+      border-radius: 2rem;
+      border: none;
+      font-size: 1.1rem;
+      background: #232526;
+      color: #fff;
+      outline: none;
+      box-shadow: 0 2px 8px #0002;
+      transition: box-shadow 0.2s;
+    }
+    #search-input:focus {
+      box-shadow: 0 2px 16px #ff512f55;
+    }
+    #search-button {
+      padding: 0.8rem 2rem;
+      border-radius: 2rem;
+      border: none;
+      background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #0002;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    #search-button:hover {
+      background: linear-gradient(90deg, #dd2476 0%, #ff512f 100%);
+      box-shadow: 0 2px 16px #ff512f55;
+    }
+    .phoenix-video-section {
+      margin: 2.5rem 0 2rem 0;
+      background: rgba(44, 44, 60, 0.85);
+      border-radius: 1.5rem;
+      padding: 2rem 1rem;
+      box-shadow: 0 2px 16px 0 #0002;
+    }
+    .video {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .phoenix-info {
+      color: #ffb199;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    .phoenix-results {
+      margin: 2rem 0;
+      min-height: 120px;
+      background: rgba(44, 44, 60, 0.7);
+      border-radius: 1.2rem;
+      padding: 1.5rem 1rem;
+      box-shadow: 0 2px 8px #0002;
+    }
+    .phoenix-info-section {
+      margin: 2.5rem 0 1.5rem 0;
+      background: rgba(44, 44, 60, 0.85);
+      border-radius: 1.5rem;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 2px 16px 0 #0002;
+    }
+    .phoenix-info-section h2, .phoenix-info-section h3 {
+      color: #ff512f;
+      margin-top: 0;
+    }
+    .phoenix-info-section ul {
+      list-style: disc inside;
+      margin: 1rem 0 1.5rem 0;
+      color: #fff;
+      padding-left: 1.2rem;
+    }
+    .phoenix-footer-links {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #ffb199;
+    }
+    .phoenix-footer {
+      text-align: center;
+      padding: 2rem 0 1rem 0;
+      color: #bdbdbd;
+      font-size: 1rem;
+      background: none;
+    }
+    @media (max-width: 600px) {
+      .phoenix-main {
+        padding: 1rem 0.2rem;
+      }
+      .phoenix-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 0.5rem;
+      }
+      .phoenix-logo {
+        font-size: 1.3rem;
+      }
+      #search-input {
+        width: 100%;
+        min-width: 0;
+      }
+      .phoenix-hero, .phoenix-info-section, .phoenix-video-section, .phoenix-results {
+        padding: 1rem 0.5rem;
+      }
+    }
+  </style>
+  <!-- Serviceworker code for PWA  -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+          console.log('Service worker registered: ', registration.scope);
+        }).catch(function(error) {
+          console.log('Service worker registration failed: ', error);
+        });
+      });
+    }
+  </script>
+</head>
+
+<body>
+  <header class="phoenix-header">
+    <div class="phoenix-logo">
+      <img src="cinema-movie-logo-with-gradient-background-template_502990-937.avif" alt="Phoenix Logo" height="56">
+      <span>Phoenix</span>
+    </div>
+    <nav class="phoenix-nav">
+      <a href="/privacy-policy.html" target="_blank">Privacy Policy</a>
+      <a href="/terms-and-conditions.html" target="_blank">Terms & Conditions</a>
+      <a href="/contact.html" target="_blank">Contact</a>
+    </nav>
+  </header>
+  <main class="phoenix-main">
+    <section class="phoenix-hero">
+      <h1>Welcome to <span class="phoenix-gradient">Phoenix</span></h1>
+      <h2 class="phoenix-tagline">Stream. Search. Rise Above.</h2>
+      <form class="phoenix-search-container" onsubmit="event.preventDefault(); document.getElementById('search-button').click();">
+        <input type="search" id="search-input" placeholder="Search any Movie, Webseries, or Anime" autocomplete="off">
+        <button id="search-button" type="button">Search</button>
+      </form>
+    </section>
+    <section class="phoenix-video-section">
+      <div id="video" class="video">
+        <iframe id="iframe" scrolling="no" src="" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="width:100%;min-height:340px;border-radius:1rem;"></iframe>
+        <p class="phoenix-info">If you experience errors or buffering, click the movie poster below or switch the player in the top right corner.</p>
+        <div id="webSeriesData"></div>
+      </div>
+    </section>
+    <section id="results" class="phoenix-results"></section>
+    <section class="phoenix-info-section">
+      <h2>About Phoenix</h2>
+      <p>Phoenix is a modern, open-source project that lets you search and stream Movies and Web Shows from the largest databases on the internet. Fast, free, and privacy-friendly.</p>
+      <ul>
+        <li><b>Data Sources:</b> IMDB & TMDB for comprehensive, up-to-date content.</li>
+        <li><b>Single Page App:</b> Lightning-fast, no reloads, and smart URL handling.</li>
+        <li><b>Open Source:</b> <span style="color:#ff512f">Available for everyone</span></li>
+      </ul>
+      <h3>Libraries Used</h3>
+      <div class="phoenix-footer-links">
+        <span>PACE</span>
+        <span>TMDB</span>
+        <span>IMDB</span>
+      </div>
+    </section>
+  </main>
+  <footer class="phoenix-footer">
+    <span>&copy; 2025 Phoenix. All rights reserved.</span>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+  <script src="script.min.js"></script>
+  <script>
+    // Prevent any auto-scroll to top on SPA navigation or search
+    window.scrollTo = function(){};
+    // If any code tries to scroll to top, this disables it globally
+    // If you want to allow smooth scroll to anchors, remove this override
+  </script>
+</body>
+</html>
