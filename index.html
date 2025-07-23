@@ -716,7 +716,9 @@
     }
 
     function switchLanguage() {
-      if (!currentVideoData) {
+      // Check both local and global currentVideoData
+      const videoData = currentVideoData || window.currentVideoData;
+      if (!videoData) {
         alert('Please select a movie or show first');
         return;
       }
