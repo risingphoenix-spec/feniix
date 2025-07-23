@@ -679,7 +679,9 @@
     let languages = ['EN', 'ES', 'FR', 'DE'];
 
     function switchServer() {
-      if (!currentVideoData) {
+      // Check both local and global currentVideoData
+      const videoData = currentVideoData || window.currentVideoData;
+      if (!videoData) {
         alert('Please select a movie or show first');
         return;
       }
@@ -696,13 +698,13 @@
       // Switch between different embed sources
       switch(serverIndex) {
         case 0: // VidSrc
-          iframe.src = currentVideoData.vidsrcUrl;
+          iframe.src = videoData.vidsrcUrl;
           break;
         case 1: // 2Embed
-          iframe.src = currentVideoData.embedUrl;
+          iframe.src = videoData.embedUrl;
           break;
         case 2: // SuperEmbed (alternative)
-          iframe.src = currentVideoData.vidsrcUrl.replace('vidsrc.su', 'vidsrc.me');
+          iframe.src = videoData.vidsrcUrl.replace('vidsrc.su', 'vidsrc.me');
           break;
       }
 
