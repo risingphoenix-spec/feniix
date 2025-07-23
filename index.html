@@ -400,8 +400,32 @@
       </section>
       <section class="phoenix-video-section">
         <div id="video" class="video">
-          <iframe id="iframe" scrolling="no" src="" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="width:100%;min-height:340px;border-radius:16px;"></iframe>
-          <p class="phoenix-info">If you experience errors or buffering, click the movie poster below or switch the player in the top right corner.</p>
+          <div class="player-container">
+            <iframe id="iframe" scrolling="no" src="" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="width:100%;min-height:340px;border-radius:12px;"></iframe>
+            <div class="player-controls">
+              <div class="control-group">
+                <button class="control-btn server-btn" onclick="switchServer()" title="Switch Server">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 6h-4V7h4v2zM19 13H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm-5 6h-4v-2h4v2z"/>
+                  </svg>
+                </button>
+                <button class="control-btn refresh-btn" onclick="refreshPlayer()" title="Refresh Player">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                  </svg>
+                </button>
+                <button class="control-btn fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="server-indicator">
+                <span id="current-server">VidSrc</span>
+              </div>
+            </div>
+          </div>
+          <p class="phoenix-info">Use the controls above to switch servers or go fullscreen. If you experience issues, try refreshing the player.</p>
           <div id="webSeriesData"></div>
         </div>
       </section>
