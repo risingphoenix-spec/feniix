@@ -51,7 +51,8 @@ function fetchAndShow() {
           let imageAndInfo = "";
 
           if (result.qid === "movie" && result.i) {
-            imageAndInfo = `<a onClick="setUrl(this); return setVideo(this);" url="imdb=${result.id}&type=movie&title=${result.l.replace(/ /g, "_")}" isWebSeries="false" title="${result.l}"  class="links" IMDB="${result.id}" href="https://www.2embed.cc/embed/${result.id}" target="_blank">
+            // We'll need to get TMDB ID first, but for now use 2embed as fallback
+            imageAndInfo = `<a onClick="setUrl(this); return setVideo(this);" url="imdb=${result.id}&type=movie&title=${result.l.replace(/ /g, "_")}" isWebSeries="false" title="${result.l}"  class="links" IMDB="${result.id}" href="https://www.2embed.cc/embed/${result.id}" data-embed-url="https://www.2embed.cc/embed/${result.id}" target="_blank">
                      <img alt="${result.l}" src="${optimisedImageUrl(result.i.imageUrl)}">
                       <div class="info">
                        <h3>${result.l}</h3>
@@ -59,7 +60,7 @@ function fetchAndShow() {
                       </div>
                    </a>`;
           } else if (result.qid === "tvSeries" && result.i) {
-            imageAndInfo = `<a onClick="setUrl(this); return setVideo(this);" url="imdb=${result.id}&season=1&episode=1&title=${result.l.replace(/ /g, "_")}" IMDB="${result.id}" title="${result.l}" isWebSeries="true" class="links" href="https://www.2embed.cc/embedtv/${result.id}&s=1&e=1" target="_blank">
+            imageAndInfo = `<a onClick="setUrl(this); return setVideo(this);" url="imdb=${result.id}&season=1&episode=1&title=${result.l.replace(/ /g, "_")}" IMDB="${result.id}" title="${result.l}" isWebSeries="true" class="links" href="https://www.2embed.cc/embedtv/${result.id}&s=1&e=1" data-embed-url="https://www.2embed.cc/embedtv/${result.id}&s=1&e=1" target="_blank">
                       <img alt="${result.l}" src="${optimisedImageUrl(result.i.imageUrl)}">
                         <div class="info">
                           <h3>${result.l}</h3>
@@ -282,6 +283,7 @@ async function setAll(imdb, title, season, episode, type) {
     a.setAttribute("class", "links");
     a.setAttribute("IMDB", imdb);
     a.setAttribute("href", PLAYER_CONFIG.embedMovieUrl(tmdbId));
+    a.setAttribute("data-embed-url", `https://www.2embed.cc/embed/${imdb}`);
     a.setAttribute("target", "_blank");
     a.click();
   } else if (imdb && title && episode && !type) {
@@ -303,6 +305,7 @@ async function setAll(imdb, title, season, episode, type) {
       "href",
       PLAYER_CONFIG.embedTvUrl(tmdbId, season, episode)
     );
+    a.setAttribute("data-embed-url", `https://www.2embed.cc/embedtv/${imdb}&s=${season}&e=${episode}`);
     a.setAttribute("target", "_blank");
     a.click();
   }
@@ -311,10 +314,66 @@ async function setAll(imdb, title, season, episode, type) {
 // fetch and set video
 
 function setVideo(element) {
+  // Switch to player tab first
+  if (typeof showTab === 'function') {
+    // Find and click the player tab
+    const playerTab = document.querySelector('.nav-item[onclick*="player"]');
+    if (playerTab) {
+      document.querySelectorAll('.nav-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.getElementById('player-content').classList.add('active');
+      playerTab.classList.add('active');
+    }
+  }
+
   const iframe = document.getElementById(PLAYER_CONFIG.iframeId);
   const video = document.getElementById(PLAYER_CONFIG.videoContainerId);
-  iframe.src = element.getAttribute("href");
+
+  // Get both server URLs
+  const embedUrl = element.getAttribute("href"); // Current 2embed URL
+  const imdbId = element.getAttribute("IMDB");
+  const isWebSeries = element.getAttribute("isWebSeries");
+  const title = element.getAttribute("title");
+
+  // Create VidSrc URL based on IMDB ID
+  let vidsrcUrl = '';
+  if (isWebSeries === "true") {
+    const searchParams = new URLSearchParams(window.location.search);
+    const season = searchParams.get("season") || "1";
+    const episode = searchParams.get("episode") || "1";
+    vidsrcUrl = `https://vidsrc.su/embed/tv/${imdbId}/${season}/${episode}`;
+  } else {
+    vidsrcUrl = `https://vidsrc.su/embed/movie/${imdbId}`;
+  }
+
+  // Store video data globally - this is critical for download/server switching
+  window.currentVideoData = {
+    vidsrcUrl: vidsrcUrl,
+    embedUrl: embedUrl,
+    imdbId: imdbId,
+    isWebSeries: isWebSeries,
+    title: title
+  };
+
+  // Also set it for any other references
+  if (typeof window !== 'undefined') {
+    window.globalVideoData = window.currentVideoData;
+  }
+
+  iframe.src = embedUrl; // Start with 2embed by default
   video.style.display = "block";
+
+  // Reset server button text
+  const serverBtn = document.querySelector('.server-btn');
+  if (serverBtn) {
+    serverBtn.textContent = '2Embed';
+  }
+
+  console.log('Video data stored:', window.currentVideoData); // Debug log
   const webSeriesData = document.getElementById("webSeriesData");
   const tmdbApiKey = "b6b677eb7d4ec17f700e3d4dfc31d005";
   const imdbID = element.getAttribute("IMDB");
@@ -337,6 +396,26 @@ function setVideo(element) {
 
   if (element.getAttribute("title") !== "") {
     document.title = element.getAttribute("title");
+  }
+
+  // Save to history
+  const title = element.getAttribute("title");
+  const imdb = element.getAttribute("IMDB");
+  const isWebSeries = element.getAttribute("isWebSeries");
+  let season = null;
+  let episode = null;
+  let type = null;
+
+  if (isWebSeries === "true") {
+    const searchParams = new URLSearchParams(window.location.search);
+    season = searchParams.get("season");
+    episode = searchParams.get("episode");
+  } else {
+    type = "movie";
+  }
+
+  if (title && imdb && typeof saveToHistory === 'function') {
+    saveToHistory(title, imdb, type, season, episode);
   }
 
   // highlight selected webseries episode
@@ -388,7 +467,7 @@ function setVideo(element) {
             minimumIntegerDigits: 2,
             useGrouping: false,
           });
-          episodesData += `<a class="episodes" title="${seasonsDataJSON.name + ": E" + formatedEpisodeNumber + ". " + episode.name}" cssidentification="s${seasonNumber}e${episodeNumber}" url="imdb=${imdbID}&season=${seasonNumber}&episode=${episodeNumber}&title=${seasonsDataJSON.name.replace(/ /g, "_") + "_E" + formatedEpisodeNumber + "_" + episode.name.replace(/ /g, "_")}" onClick="event.preventDefault();setVideo(this);setUrl(this); " href="${PLAYER_CONFIG.embedTvUrl(showId, seasonNumber, episodeNumber)}">E${formatedEpisodeNumber}. ${episode.name}</a>`;
+          episodesData += `<a class="episodes" title="${seasonsDataJSON.name + ": E" + formatedEpisodeNumber + ". " + episode.name}" cssidentification="s${seasonNumber}e${episodeNumber}" url="imdb=${imdbID}&season=${seasonNumber}&episode=${episodeNumber}&title=${seasonsDataJSON.name.replace(/ /g, "_") + "_E" + formatedEpisodeNumber + "_" + episode.name.replace(/ /g, "_")}" onClick="event.preventDefault();setVideo(this);setUrl(this); " href="${PLAYER_CONFIG.embedTvUrl(showId, seasonNumber, episodeNumber)}" data-embed-url="https://www.2embed.cc/embedtv/${imdbID}&s=${seasonNumber}&e=${episodeNumber}">E${formatedEpisodeNumber}. ${episode.name}</a>`;
         }
 
         episodeContainer.innerHTML = episodesData;

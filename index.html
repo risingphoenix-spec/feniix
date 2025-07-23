@@ -1,275 +1,1127 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <link rel="shortcut icon" href="icons/icon.ico" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#6C63FF" />
-  <meta name="robots" content="index, follow">
-  <meta property="og:image" content="/og.jpg"/>
-  <meta name="description"
-    content="Discover and stream your favorite movies and TV shows with Phoenix - a modern, open source content search and watch website. Enjoy unlimited access to a vast library of content for free.">
-  <title>Phoenix</title>
-  <link rel="stylesheet" href="style.min.css">
-  <link rel="stylesheet" href="center-atom.min.css">
-  <link rel="stylesheet" href="phoenix-redesign.css">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="description" content="Phoenix - Modern streaming platform for movies and TV shows">
+  <title>Phoenix - Stream Movies & TV Shows</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="icons/icon.ico">
+  
   <style>
-    body {
-      background: linear-gradient(135deg, #232526 0%, #414345 100%);
-      color: #fff;
-      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    /* Global Reset */
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Root Variables */
+    :root {
+      --primary-bg: #0a0a0f;
+      --secondary-bg: #1a1a2e;
+      --accent-bg: #16213e;
+      --primary-purple: #7c3aed;
+      --light-purple: #a78bfa;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --text-muted: #666666;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --hover-bg: rgba(255, 255, 255, 0.05);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      --border-radius: 12px;
+    }
+
+    /* Base Styles */
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 50%, var(--accent-bg) 100%);
+      color: var(--text-primary);
       min-height: 100vh;
+      line-height: 1.6;
     }
-    .phoenix-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 3vw;
-      background: rgba(30, 30, 40, 0.95);
-      box-shadow: 0 2px 12px 0 rgba(0,0,0,0.12);
-      position: sticky;
+
+    /* Header */
+    .app-header {
+      position: fixed;
       top: 0;
-      z-index: 100;
-    }
-    .phoenix-logo {
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 1000;
       display: flex;
       align-items: center;
-      gap: 1rem;
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #ff512f;
+      justify-content: space-between;
+      padding: 0 5%;
     }
-    .phoenix-logo img {
-      height: 56px;
-      border-radius: 16px;
-      box-shadow: 0 2px 8px #0005;
-    }
-    .phoenix-nav a {
-      color: #fff;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--primary-purple);
       text-decoration: none;
-      margin-left: 2rem;
-      font-size: 1.1rem;
-      transition: color 0.2s;
     }
-    .phoenix-nav a:hover {
-      color: #ff512f;
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
     }
-    .phoenix-main {
-      max-width: 900px;
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      background: var(--glass-bg);
+      padding: 6px;
+      border-radius: 50px;
+      border: 1px solid var(--border-color);
+    }
+
+    .nav-tab {
+      padding: 10px 20px;
+      border-radius: 50px;
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    .nav-tab.active {
+      background: var(--primary-purple);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+    }
+
+    .nav-tab:hover:not(.active) {
+      background: var(--hover-bg);
+      color: var(--text-primary);
+    }
+
+    /* Main Content */
+    .app-main {
+      margin-top: 70px;
+      min-height: calc(100vh - 70px);
+    }
+
+    .page {
+      display: none;
+      padding: 40px 5%;
+      max-width: 1400px;
       margin: 0 auto;
-      padding: 2.5rem 1rem 1rem 1rem;
     }
-    .phoenix-hero {
+
+    .page.active {
+      display: block;
+    }
+
+    /* Search Page */
+    .search-hero {
       text-align: center;
-      margin-bottom: 2.5rem;
-      padding: 2.5rem 1rem 2rem 1rem;
-      background: rgba(44, 44, 60, 0.85);
-      border-radius: 2rem;
-      box-shadow: 0 4px 32px 0 #0003;
+      padding: 60px 0 40px 0;
     }
-    .phoenix-gradient {
-      background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text-primary) 0%, var(--light-purple) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-fill-color: transparent;
     }
-    .phoenix-tagline {
-      font-size: 1.5rem;
-      color: #bdbdbd;
-      margin-top: 0.5rem;
-      margin-bottom: 2rem;
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      font-weight: 400;
     }
-    .phoenix-search-container {
+
+    .search-container {
       display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--glass-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
     }
-    #search-input {
-      width: 320px;
-      padding: 0.8rem 1.2rem;
-      border-radius: 2rem;
+
+    .search-input {
+      flex: 1;
+      padding: 20px 24px;
+      background: transparent;
       border: none;
-      font-size: 1.1rem;
-      background: #232526;
-      color: #fff;
+      color: var(--text-primary);
+      font-size: 16px;
       outline: none;
-      box-shadow: 0 2px 8px #0002;
-      transition: box-shadow 0.2s;
     }
-    #search-input:focus {
-      box-shadow: 0 2px 16px #ff512f55;
+
+    .search-input::placeholder {
+      color: var(--text-muted);
     }
-    #search-button {
-      padding: 0.8rem 2rem;
-      border-radius: 2rem;
+
+    .search-btn {
+      padding: 20px 32px;
+      background: linear-gradient(135deg, var(--primary-purple) 0%, var(--light-purple) 100%);
       border: none;
-      background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
-      color: #fff;
-      font-size: 1.1rem;
+      color: var(--text-primary);
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 2px 8px #0002;
-      transition: background 0.2s, box-shadow 0.2s;
+      transition: all 0.3s ease;
     }
-    #search-button:hover {
-      background: linear-gradient(90deg, #dd2476 0%, #ff512f 100%);
-      box-shadow: 0 2px 16px #ff512f55;
+
+    .search-btn:hover {
+      transform: translateX(-2px);
+      box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
     }
-    .phoenix-video-section {
-      margin: 2.5rem 0 2rem 0;
-      background: rgba(44, 44, 60, 0.85);
-      border-radius: 1.5rem;
-      padding: 2rem 1rem;
-      box-shadow: 0 2px 16px 0 #0002;
+
+    /* Search Results - Horizontal Layout */
+    .results-section {
+      margin-top: 40px;
     }
-    .video {
+
+    .results-header {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+
+    .results-container {
       display: flex;
-      flex-direction: column;
+      overflow-x: auto;
+      gap: 20px;
+      padding: 20px 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-purple) transparent;
+    }
+
+    .results-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .results-container::-webkit-scrollbar-track {
+      background: var(--glass-bg);
+      border-radius: 4px;
+    }
+
+    .results-container::-webkit-scrollbar-thumb {
+      background: var(--primary-purple);
+      border-radius: 4px;
+    }
+
+    .movie-card {
+      min-width: 200px;
+      width: 200px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .movie-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow);
+      border-color: var(--primary-purple);
+    }
+
+    .movie-poster {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
+    .movie-info {
+      padding: 16px;
+    }
+
+    .movie-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .movie-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+      font-size: 18px;
+    }
+
+    /* Player Page */
+    .player-section {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .player-container {
+      position: relative;
+      background: #000;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .video-iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: var(--border-radius);
+    }
+
+    .player-controls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .control-btn {
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .control-btn:hover {
+      background: rgba(124, 58, 237, 0.8);
+      border-color: var(--primary-purple);
+    }
+
+    .episodes-container {
+      margin-top: 20px;
+    }
+
+    .episodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .episode-btn {
+      padding: 12px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .episode-btn:hover,
+    .episode-btn.active {
+      background: var(--primary-purple);
+      border-color: var(--primary-purple);
+    }
+
+    /* History Page */
+    .history-header {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 1.5rem;
+      margin-bottom: 30px;
     }
-    .phoenix-info {
-      color: #ffb199;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-      text-align: center;
+
+    .history-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
     }
-    .phoenix-results {
-      margin: 2rem 0;
-      min-height: 120px;
-      background: rgba(44, 44, 60, 0.7);
-      border-radius: 1.2rem;
-      padding: 1.5rem 1rem;
-      box-shadow: 0 2px 8px #0002;
+
+    .clear-btn {
+      padding: 10px 20px;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      border-radius: 8px;
+      color: #f87171;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
-    .phoenix-info-section {
-      margin: 2.5rem 0 1.5rem 0;
-      background: rgba(44, 44, 60, 0.85);
-      border-radius: 1.5rem;
-      padding: 2rem 1.5rem;
-      box-shadow: 0 2px 16px 0 #0002;
+
+    .clear-btn:hover {
+      background: rgba(239, 68, 68, 0.3);
     }
-    .phoenix-info-section h2, .phoenix-info-section h3 {
-      color: #ff512f;
-      margin-top: 0;
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
     }
-    .phoenix-info-section ul {
-      list-style: disc inside;
-      margin: 1rem 0 1.5rem 0;
-      color: #fff;
-      padding-left: 1.2rem;
+
+    .history-item {
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
-    .phoenix-footer-links {
-      display: flex;
-      gap: 1.5rem;
-      margin-top: 1rem;
-      font-size: 1.1rem;
-      color: #ffb199;
+
+    .history-item:hover {
+      background: var(--hover-bg);
+      transform: translateY(-4px);
     }
-    .phoenix-footer {
-      text-align: center;
-      padding: 2rem 0 1rem 0;
-      color: #bdbdbd;
-      font-size: 1rem;
-      background: none;
+
+    .history-item-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
     }
-    @media (max-width: 600px) {
-      .phoenix-main {
-        padding: 1rem 0.2rem;
+
+    .history-item-date {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* Download Modal */
+    .download-modal {
+      position: absolute;
+      top: 50px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      backdrop-filter: blur(20px);
+      z-index: 20;
+      min-width: 200px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .quality-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .quality-btn {
+      padding: 10px 16px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .quality-btn:hover {
+      background: var(--primary-purple);
+      border-color: var(--primary-purple);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .app-header {
+        padding: 0 4%;
       }
-      .phoenix-header {
+
+      .logo {
+        font-size: 1.5rem;
+      }
+
+      .nav-tabs {
+        gap: 4px;
+        padding: 4px;
+      }
+
+      .nav-tab {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+
+      .page {
+        padding: 20px 4%;
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .search-container {
         flex-direction: column;
-        gap: 1rem;
-        padding: 1rem 0.5rem;
       }
-      .phoenix-logo {
-        font-size: 1.3rem;
+
+      .search-input {
+        border-radius: 16px 16px 0 0;
       }
-      #search-input {
-        width: 100%;
-        min-width: 0;
+
+      .search-btn {
+        border-radius: 0 0 16px 16px;
       }
-      .phoenix-hero, .phoenix-info-section, .phoenix-video-section, .phoenix-results {
-        padding: 1rem 0.5rem;
+
+      .results-container {
+        gap: 16px;
       }
+
+      .movie-card {
+        min-width: 160px;
+        width: 160px;
+      }
+
+      .video-iframe {
+        height: 250px;
+      }
+
+      .history-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border-color);
+      border-top: 3px solid var(--primary-purple);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
-  <!-- Serviceworker code for PWA  -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/sw.js').then(function(registration) {
-          console.log('Service worker registered: ', registration.scope);
-        }).catch(function(error) {
-          console.log('Service worker registration failed: ', error);
-        });
-      });
-    }
-  </script>
 </head>
 
 <body>
-  <header class="phoenix-header">
-    <div class="phoenix-logo">
-      <img src="cinema-movie-logo-with-gradient-background-template_502990-937.avif" alt="Phoenix Logo" height="56">
-      <span>Phoenix</span>
-    </div>
-    <nav class="phoenix-nav">
-      <a href="/privacy-policy.html" target="_blank">Privacy Policy</a>
-      <a href="/terms-and-conditions.html" target="_blank">Terms & Conditions</a>
-      <a href="/contact.html" target="_blank">Contact</a>
+  <!-- Header -->
+  <header class="app-header">
+    <a href="#" class="logo">
+      <img src="cinema-movie-logo-with-gradient-background-template_502990-937.avif" alt="Phoenix">
+      Phoenix
+    </a>
+    
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchPage('search')">Search</button>
+      <button class="nav-tab" onclick="switchPage('player')">Player</button>
+      <button class="nav-tab" onclick="switchPage('history')">History</button>
     </nav>
   </header>
-  <main class="phoenix-main">
-    <section class="phoenix-hero">
-      <h1>Welcome to <span class="phoenix-gradient">Phoenix</span></h1>
-      <h2 class="phoenix-tagline">Stream. Search. Rise Above.</h2>
-      <form class="phoenix-search-container" onsubmit="event.preventDefault(); document.getElementById('search-button').click();">
-        <input type="search" id="search-input" placeholder="Search any Movie, Webseries, or Anime" autocomplete="off">
-        <button id="search-button" type="button">Search</button>
-      </form>
-    </section>
-    <section class="phoenix-video-section">
-      <div id="video" class="video">
-        <iframe id="iframe" scrolling="no" src="" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="width:100%;min-height:340px;border-radius:1rem;"></iframe>
-        <p class="phoenix-info">If you experience errors or buffering, click the movie poster below or switch the player in the top right corner.</p>
-        <div id="webSeriesData"></div>
+
+  <!-- Main Content -->
+  <main class="app-main">
+    <!-- Search Page -->
+    <section id="search-page" class="page active">
+      <div class="search-hero">
+        <h1 class="hero-title">Phoenix</h1>
+        <p class="hero-subtitle">Discover and stream your favorite movies and TV shows</p>
+        
+        <div class="search-container">
+          <input type="text" class="search-input" id="searchInput" placeholder="Search movies, TV shows, anime...">
+          <button class="search-btn" onclick="performSearch()">Search</button>
+        </div>
+      </div>
+
+      <div class="results-section" id="resultsSection" style="display: none;">
+        <h2 class="results-header">Search Results</h2>
+        <div class="results-container" id="resultsContainer">
+          <!-- Results will be populated here -->
+        </div>
+      </div>
+
+      <div class="no-results" id="noResults" style="display: none;">
+        <p>No results found. Try searching for something else.</p>
       </div>
     </section>
-    <section id="results" class="phoenix-results"></section>
-    <section class="phoenix-info-section">
-      <h2>About Phoenix</h2>
-      <p>Phoenix is a modern, open-source project that lets you search and stream Movies and Web Shows from the largest databases on the internet. Fast, free, and privacy-friendly.</p>
-      <ul>
-        <li><b>Data Sources:</b> IMDB & TMDB for comprehensive, up-to-date content.</li>
-        <li><b>Single Page App:</b> Lightning-fast, no reloads, and smart URL handling.</li>
-        <li><b>Open Source:</b> <span style="color:#ff512f">Available for everyone</span></li>
-      </ul>
-      <h3>Libraries Used</h3>
-      <div class="phoenix-footer-links">
-        <span>PACE</span>
-        <span>TMDB</span>
-        <span>IMDB</span>
+
+    <!-- Player Page -->
+    <section id="player-page" class="page">
+      <div class="player-section">
+        <div class="player-container">
+          <iframe class="video-iframe" id="videoPlayer" src=""></iframe>
+          
+          <div class="player-controls">
+            <button class="control-btn" id="serverBtn" onclick="switchServer()">Server 1</button>
+            <button class="control-btn" id="langBtn" onclick="switchLanguage()">EN</button>
+            <button class="control-btn" onclick="showDownloadModal()">Download</button>
+            <button class="control-btn" onclick="refreshPlayer()">Refresh</button>
+            <button class="control-btn" onclick="toggleFullscreen()">Fullscreen</button>
+          </div>
+
+          <div class="download-modal" id="downloadModal" style="display: none;">
+            <h3 class="modal-title">Download Options</h3>
+            <div class="quality-grid">
+              <button class="quality-btn" onclick="downloadVideo('1080p')">1080p</button>
+              <button class="quality-btn" onclick="downloadVideo('720p')">720p</button>
+              <button class="quality-btn" onclick="downloadVideo('480p')">480p</button>
+              <button class="quality-btn" onclick="downloadVideo('360p')">360p</button>
+            </div>
+            <button class="quality-btn" onclick="hideDownloadModal()" style="width: 100%;">Close</button>
+          </div>
+        </div>
+
+        <div class="episodes-container" id="episodesContainer" style="display: none;">
+          <h3>Episodes</h3>
+          <div class="episodes-grid" id="episodesGrid">
+            <!-- Episodes will be populated here -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- History Page -->
+    <section id="history-page" class="page">
+      <div class="history-header">
+        <h2 class="history-title">Watch History</h2>
+        <button class="clear-btn" onclick="clearHistory()">Clear All</button>
+      </div>
+      
+      <div class="history-grid" id="historyGrid">
+        <div class="no-results">
+          <p>No watch history yet. Start watching something to see it here!</p>
+        </div>
       </div>
     </section>
   </main>
-  <footer class="phoenix-footer">
-    <span>&copy; 2025 Phoenix. All rights reserved.</span>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
-  <script src="script.min.js"></script>
+
   <script>
-    // Prevent any auto-scroll to top on SPA navigation or search
-    window.scrollTo = function(){};
-    // If any code tries to scroll to top, this disables it globally
-    // If you want to allow smooth scroll to anchors, remove this override
+    // Global State
+    const AppState = {
+      currentVideo: null,
+      currentServer: 0,
+      currentLanguage: 'EN',
+      searchResults: [],
+      watchHistory: JSON.parse(localStorage.getItem('phoenixHistory') || '[]'),
+      servers: ['2Embed', 'VidSrc', 'VidSrc.me'],
+      languages: ['EN', 'ES', 'FR', 'DE', 'IT']
+    };
+
+    // API Configuration
+    const API = {
+      corsProxy: 'https://cors-anywhere.pulkitpareekofficial.workers.dev/?url=',
+      imdbSearch: (query) => `${API.corsProxy}https://v3.sg.media-imdb.com/suggestion/x/${encodeURIComponent(query)}.json`,
+      tmdbKey: 'b6b677eb7d4ec17f700e3d4dfc31d005',
+      tmdbFind: (imdbId) => `https://api.themoviedb.org/3/find/${imdbId}?api_key=${API.tmdbKey}&external_source=imdb_id`,
+      tmdbTvSeasons: (tmdbId) => `https://api.themoviedb.org/3/tv/${tmdbId}?api_key=${API.tmdbKey}`,
+      tmdbTvEpisodes: (tmdbId, season) => `https://api.themoviedb.org/3/tv/${tmdbId}/season/${season}?api_key=${API.tmdbKey}`
+    };
+
+    // Utility Functions
+    const Utils = {
+      optimizeImageUrl: (url) => url.replace('._V1_.', '._V1_QL75_UX160_.'),
+      
+      formatTitle: (title) => title.replace(/ /g, '_'),
+      
+      showLoading: (container) => {
+        container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+      },
+      
+      updateUrl: (params) => {
+        const url = new URL(window.location);
+        Object.keys(params).forEach(key => {
+          if (params[key]) {
+            url.searchParams.set(key, params[key]);
+          } else {
+            url.searchParams.delete(key);
+          }
+        });
+        window.history.replaceState({}, '', url);
+      }
+    };
+
+    // Navigation
+    function switchPage(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      // Remove active from all tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected page
+      document.getElementById(`${pageId}-page`).classList.add('active');
+      event.target.classList.add('active');
+      
+      // Load page content
+      if (pageId === 'history') {
+        loadHistory();
+      }
+    }
+
+    // Search Functionality
+    async function performSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+      
+      const resultsContainer = document.getElementById('resultsContainer');
+      const resultsSection = document.getElementById('resultsSection');
+      const noResults = document.getElementById('noResults');
+      
+      // Show loading
+      resultsSection.style.display = 'block';
+      noResults.style.display = 'none';
+      Utils.showLoading(resultsContainer);
+      
+      try {
+        const response = await fetch(API.imdbSearch(query));
+        const data = await response.json();
+        const results = data.d || [];
+        
+        // Filter valid results
+        const validResults = results.filter(item => 
+          item.i && (item.qid === 'movie' || item.qid === 'tvSeries')
+        );
+        
+        if (validResults.length === 0) {
+          resultsSection.style.display = 'none';
+          noResults.style.display = 'block';
+          return;
+        }
+        
+        AppState.searchResults = validResults;
+        displaySearchResults(validResults);
+        Utils.updateUrl({ search: query });
+        
+      } catch (error) {
+        console.error('Search failed:', error);
+        resultsSection.style.display = 'none';
+        noResults.style.display = 'block';
+      }
+    }
+
+    function displaySearchResults(results) {
+      const container = document.getElementById('resultsContainer');
+      
+      container.innerHTML = results.map(item => `
+        <div class="movie-card" onclick="selectMovie('${item.id}', '${item.qid}', '${Utils.formatTitle(item.l)}')">
+          <img class="movie-poster" src="${Utils.optimizeImageUrl(item.i.imageUrl)}" alt="${item.l}">
+          <div class="movie-info">
+            <h3 class="movie-title">${item.l}</h3>
+            <p class="movie-meta">${item.s || 'No description available'}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Video Player
+    async function selectMovie(imdbId, type, title) {
+      AppState.currentVideo = {
+        imdbId,
+        type,
+        title,
+        season: type === 'tvSeries' ? 1 : null,
+        episode: type === 'tvSeries' ? 1 : null
+      };
+      
+      // Switch to player page
+      switchPage('player');
+      document.querySelector('.nav-tab[onclick*="player"]').click();
+      
+      // Load video
+      await loadVideo();
+      
+      // Save to history
+      saveToHistory();
+      
+      // Update URL
+      const urlParams = {
+        imdb: imdbId,
+        title: title
+      };
+      if (type === 'tvSeries') {
+        urlParams.season = 1;
+        urlParams.episode = 1;
+      } else {
+        urlParams.type = 'movie';
+      }
+      Utils.updateUrl(urlParams);
+    }
+
+    async function loadVideo() {
+      if (!AppState.currentVideo) return;
+      
+      const { imdbId, type, season, episode } = AppState.currentVideo;
+      const player = document.getElementById('videoPlayer');
+      const episodesContainer = document.getElementById('episodesContainer');
+      
+      // Build video URL
+      let videoUrl;
+      if (type === 'tvSeries') {
+        videoUrl = `https://www.2embed.cc/embedtv/${imdbId}&s=${season}&e=${episode}`;
+        episodesContainer.style.display = 'block';
+        await loadEpisodes();
+      } else {
+        videoUrl = `https://www.2embed.cc/embed/${imdbId}`;
+        episodesContainer.style.display = 'none';
+      }
+      
+      player.src = videoUrl;
+      
+      // Reset controls
+      document.getElementById('serverBtn').textContent = AppState.servers[0];
+      document.getElementById('langBtn').textContent = AppState.currentLanguage;
+    }
+
+    async function loadEpisodes() {
+      if (!AppState.currentVideo || AppState.currentVideo.type !== 'tvSeries') return;
+      
+      try {
+        // Get TMDB ID from IMDB ID
+        const findResponse = await fetch(API.tmdbFind(AppState.currentVideo.imdbId));
+        const findData = await findResponse.json();
+        const tmdbId = findData.tv_results[0]?.id;
+        
+        if (!tmdbId) return;
+        
+        // Get show info
+        const showResponse = await fetch(API.tmdbTvSeasons(tmdbId));
+        const showData = await showResponse.json();
+        const seasonCount = showData.number_of_seasons;
+        
+        const episodesGrid = document.getElementById('episodesGrid');
+        episodesGrid.innerHTML = '';
+        
+        // Load episodes for each season
+        for (let s = 1; s <= Math.min(seasonCount, 3); s++) { // Limit to 3 seasons for performance
+          const seasonResponse = await fetch(API.tmdbTvEpisodes(tmdbId, s));
+          const seasonData = await seasonResponse.json();
+          
+          seasonData.episodes.forEach(ep => {
+            const episodeBtn = document.createElement('button');
+            episodeBtn.className = 'episode-btn';
+            episodeBtn.textContent = `S${s}E${ep.episode_number}`;
+            episodeBtn.onclick = () => selectEpisode(s, ep.episode_number);
+            
+            if (s === AppState.currentVideo.season && ep.episode_number === AppState.currentVideo.episode) {
+              episodeBtn.classList.add('active');
+            }
+            
+            episodesGrid.appendChild(episodeBtn);
+          });
+        }
+      } catch (error) {
+        console.error('Failed to load episodes:', error);
+      }
+    }
+
+    function selectEpisode(season, episode) {
+      AppState.currentVideo.season = season;
+      AppState.currentVideo.episode = episode;
+      
+      // Update active episode
+      document.querySelectorAll('.episode-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Reload video
+      loadVideo();
+      
+      // Update URL
+      Utils.updateUrl({
+        imdb: AppState.currentVideo.imdbId,
+        season: season,
+        episode: episode,
+        title: AppState.currentVideo.title
+      });
+    }
+
+    // Player Controls
+    function switchServer() {
+      if (!AppState.currentVideo) {
+        alert('Please select a movie or show first');
+        return;
+      }
+      
+      AppState.currentServer = (AppState.currentServer + 1) % AppState.servers.length;
+      const serverBtn = document.getElementById('serverBtn');
+      const player = document.getElementById('videoPlayer');
+      
+      serverBtn.textContent = AppState.servers[AppState.currentServer];
+      
+      // Switch video source based on server
+      const { imdbId, type, season, episode } = AppState.currentVideo;
+      let newUrl;
+      
+      switch (AppState.currentServer) {
+        case 0: // 2Embed
+          newUrl = type === 'tvSeries' ? 
+            `https://www.2embed.cc/embedtv/${imdbId}&s=${season}&e=${episode}` :
+            `https://www.2embed.cc/embed/${imdbId}`;
+          break;
+        case 1: // VidSrc
+          newUrl = type === 'tvSeries' ? 
+            `https://vidsrc.su/embed/tv/${imdbId}/${season}/${episode}` :
+            `https://vidsrc.su/embed/movie/${imdbId}`;
+          break;
+        case 2: // VidSrc.me
+          newUrl = type === 'tvSeries' ? 
+            `https://vidsrc.me/embed/tv/${imdbId}/${season}/${episode}` :
+            `https://vidsrc.me/embed/movie/${imdbId}`;
+          break;
+      }
+      
+      player.src = newUrl;
+    }
+
+    function switchLanguage() {
+      if (!AppState.currentVideo) {
+        alert('Please select a movie or show first');
+        return;
+      }
+      
+      const currentIndex = AppState.languages.indexOf(AppState.currentLanguage);
+      const nextIndex = (currentIndex + 1) % AppState.languages.length;
+      AppState.currentLanguage = AppState.languages[nextIndex];
+      
+      document.getElementById('langBtn').textContent = AppState.currentLanguage;
+      
+      // Add language parameter to current video URL
+      const player = document.getElementById('videoPlayer');
+      const currentUrl = player.src;
+      const separator = currentUrl.includes('?') ? '&' : '?';
+      player.src = `${currentUrl}${separator}lang=${AppState.currentLanguage.toLowerCase()}`;
+    }
+
+    function refreshPlayer() {
+      const player = document.getElementById('videoPlayer');
+      const currentSrc = player.src;
+      player.src = '';
+      setTimeout(() => player.src = currentSrc, 100);
+    }
+
+    function toggleFullscreen() {
+      const container = document.querySelector('.player-container');
+      
+      if (!document.fullscreenElement) {
+        container.requestFullscreen?.() || 
+        container.webkitRequestFullscreen?.() || 
+        container.msRequestFullscreen?.();
+      } else {
+        document.exitFullscreen?.() || 
+        document.webkitExitFullscreen?.() || 
+        document.msExitFullscreen?.();
+      }
+    }
+
+    // Download Modal
+    function showDownloadModal() {
+      if (!AppState.currentVideo) {
+        alert('Please select a movie or show first');
+        return;
+      }
+      document.getElementById('downloadModal').style.display = 'block';
+    }
+
+    function hideDownloadModal() {
+      document.getElementById('downloadModal').style.display = 'none';
+    }
+
+    function downloadVideo(quality) {
+      if (!AppState.currentVideo) return;
+      
+      const { imdbId, type, season, episode, title } = AppState.currentVideo;
+      
+      const downloadUrls = type === 'tvSeries' ? [
+        `https://dl.vidsrc.me/tv/${imdbId}/${season}/${episode}/${quality}`,
+        `https://2embed.cc/download/tv/${imdbId}/${season}/${episode}/${quality}`
+      ] : [
+        `https://dl.vidsrc.me/movie/${imdbId}/${quality}`,
+        `https://2embed.cc/download/movie/${imdbId}/${quality}`
+      ];
+      
+      // Try each URL
+      downloadUrls.forEach((url, index) => {
+        setTimeout(() => {
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `${title}_${quality}.mp4`;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }, index * 1000);
+      });
+      
+      hideDownloadModal();
+      alert(`Download started for ${quality} quality!`);
+    }
+
+    // History Management
+    function saveToHistory() {
+      if (!AppState.currentVideo) return;
+      
+      const historyItem = {
+        ...AppState.currentVideo,
+        timestamp: Date.now(),
+        watchedAt: new Date().toLocaleDateString()
+      };
+      
+      // Remove duplicates
+      AppState.watchHistory = AppState.watchHistory.filter(item => 
+        item.imdbId !== historyItem.imdbId || 
+        item.season !== historyItem.season || 
+        item.episode !== historyItem.episode
+      );
+      
+      // Add to beginning
+      AppState.watchHistory.unshift(historyItem);
+      
+      // Limit to 50 items
+      AppState.watchHistory = AppState.watchHistory.slice(0, 50);
+      
+      // Save to localStorage
+      localStorage.setItem('phoenixHistory', JSON.stringify(AppState.watchHistory));
+    }
+
+    function loadHistory() {
+      const historyGrid = document.getElementById('historyGrid');
+      
+      if (AppState.watchHistory.length === 0) {
+        historyGrid.innerHTML = '<div class="no-results"><p>No watch history yet. Start watching something to see it here!</p></div>';
+        return;
+      }
+      
+      historyGrid.innerHTML = AppState.watchHistory.map(item => `
+        <div class="history-item" onclick="playFromHistory('${item.imdbId}', '${item.type}', '${item.title}', ${item.season}, ${item.episode})">
+          <h3 class="history-item-title">${item.title}${item.season ? ` S${item.season}E${item.episode}` : ''}</h3>
+          <p class="history-item-date">Watched on ${item.watchedAt}</p>
+        </div>
+      `).join('');
+    }
+
+    function playFromHistory(imdbId, type, title, season, episode) {
+      AppState.currentVideo = {
+        imdbId,
+        type,
+        title,
+        season: season || null,
+        episode: episode || null
+      };
+      
+      switchPage('player');
+      document.querySelector('.nav-tab[onclick*="player"]').click();
+      loadVideo();
+    }
+
+    function clearHistory() {
+      if (confirm('Are you sure you want to clear all watch history?')) {
+        AppState.watchHistory = [];
+        localStorage.removeItem('phoenixHistory');
+        loadHistory();
+      }
+    }
+
+    // Event Listeners
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+
+    // Close download modal when clicking outside
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('downloadModal');
+      const downloadBtn = e.target.closest('[onclick*="showDownloadModal"]');
+      
+      if (modal.style.display === 'block' && !modal.contains(e.target) && !downloadBtn) {
+        hideDownloadModal();
+      }
+    });
+
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const search = urlParams.get('search');
+      const imdb = urlParams.get('imdb');
+      
+      if (search) {
+        document.getElementById('searchInput').value = search;
+        performSearch();
+      } else if (imdb) {
+        const type = urlParams.get('type') === 'movie' ? 'movie' : 'tvSeries';
+        const title = urlParams.get('title') || 'Unknown';
+        const season = urlParams.get('season') || 1;
+        const episode = urlParams.get('episode') || 1;
+        
+        AppState.currentVideo = {
+          imdbId: imdb,
+          type,
+          title,
+          season: type === 'tvSeries' ? parseInt(season) : null,
+          episode: type === 'tvSeries' ? parseInt(episode) : null
+        };
+        
+        switchPage('player');
+        loadVideo();
+      }
+    });
+
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => console.log('SW registered'))
+          .catch(error => console.log('SW registration failed'));
+      });
+    }
   </script>
 </body>
 </html>
