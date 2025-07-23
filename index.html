@@ -736,7 +736,7 @@
 
       if (iframe.src.includes('vidsrc')) {
         // For VidSrc, add language parameter
-        newSrc = currentVideoData.vidsrcUrl;
+        newSrc = videoData.vidsrcUrl;
         if (newSrc.includes('?')) {
           newSrc += `&lang=${currentLanguage.toLowerCase()}`;
         } else {
@@ -744,7 +744,7 @@
         }
       } else if (iframe.src.includes('2embed')) {
         // For 2Embed, use different language parameter
-        newSrc = currentVideoData.embedUrl;
+        newSrc = videoData.embedUrl;
         if (newSrc.includes('?')) {
           newSrc += `&audio=${currentLanguage.toLowerCase()}`;
         } else {
