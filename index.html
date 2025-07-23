@@ -434,6 +434,111 @@
   <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
   <script src="script.min.js"></script>
   <script>
+    // Navigation functionality
+    function showTab(tabName) {
+      // Hide all content
+      document.querySelectorAll('.nav-content').forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // Remove active class from all nav items
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Show selected content
+      document.getElementById(tabName + '-content').classList.add('active');
+
+      // Add active class to clicked nav item
+      event.target.classList.add('active');
+
+      // Load history if history tab is clicked
+      if (tabName === 'history') {
+        loadHistory();
+      }
+    }
+
+    // History functionality
+    function saveToHistory(title, imdb, type, season, episode) {
+      let history = JSON.parse(localStorage.getItem('phoenixHistory') || '[]');
+
+      const historyItem = {
+        title: title,
+        imdb: imdb,
+        type: type,
+        season: season,
+        episode: episode,
+        timestamp: new Date().toISOString(),
+        watchedAt: new Date().toLocaleDateString()
+      };
+
+      // Remove duplicate if exists
+      history = history.filter(item => item.imdb !== imdb || (item.season !== season || item.episode !== episode));
+
+      // Add to beginning of array
+      history.unshift(historyItem);
+
+      // Keep only last 50 items
+      history = history.slice(0, 50);
+
+      localStorage.setItem('phoenixHistory', JSON.stringify(history));
+    }
+
+    function loadHistory() {
+      const history = JSON.parse(localStorage.getItem('phoenixHistory') || '[]');
+      const historyGrid = document.getElementById('history-grid');
+
+      if (history.length === 0) {
+        historyGrid.innerHTML = '<div class="empty-history"><p>No watch history yet. Start watching something to see it here!</p></div>';
+        return;
+      }
+
+      historyGrid.innerHTML = '';
+
+      history.forEach(item => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.onclick = () => playFromHistory(item);
+
+        let displayTitle = item.title;
+        if (item.season && item.episode) {
+          displayTitle += ` S${item.season}E${item.episode}`;
+        }
+
+        historyItem.innerHTML = `
+          <h4>${displayTitle}</h4>
+          <p>Watched on ${item.watchedAt}</p>
+        `;
+
+        historyGrid.appendChild(historyItem);
+      });
+    }
+
+    function playFromHistory(item) {
+      // Switch to home tab
+      showTab('home');
+
+      // Create URL parameters
+      let url = `imdb=${item.imdb}`;
+      if (item.type) url += `&type=${item.type}`;
+      if (item.season) url += `&season=${item.season}`;
+      if (item.episode) url += `&episode=${item.episode}`;
+      url += `&title=${item.title.replace(/ /g, '_')}`;
+
+      // Update browser URL
+      window.history.replaceState({}, '', `?${url}`);
+
+      // Trigger the existing functionality
+      fillSearchInput();
+    }
+
+    function clearHistory() {
+      if (confirm('Are you sure you want to clear all watch history?')) {
+        localStorage.removeItem('phoenixHistory');
+        loadHistory();
+      }
+    }
+
     // Prevent any auto-scroll to top on SPA navigation or search
     window.scrollTo = function(){};
     // If any code tries to scroll to top, this disables it globally
