@@ -683,6 +683,11 @@
 
     function refreshPlayer() {
       const iframe = document.getElementById('iframe');
+      if (!iframe.src) {
+        alert('Please select a movie or show first');
+        return;
+      }
+
       const currentSrc = iframe.src;
       iframe.src = '';
       setTimeout(() => {
@@ -691,15 +696,20 @@
 
       // Visual feedback
       const refreshBtn = document.querySelector('.refresh-btn');
-      refreshBtn.style.background = 'rgba(124, 58, 237, 0.8)';
+      refreshBtn.classList.add('active');
       setTimeout(() => {
-        refreshBtn.style.background = 'rgba(255, 255, 255, 0.1)';
-      }, 300);
+        refreshBtn.classList.remove('active');
+      }, 500);
     }
 
     function toggleFullscreen() {
       const playerContainer = document.querySelector('.player-container');
       const iframe = document.getElementById('iframe');
+
+      if (!iframe.src) {
+        alert('Please select a movie or show first');
+        return;
+      }
 
       if (!document.fullscreenElement) {
         // Enter fullscreen
@@ -727,10 +737,10 @@
 
       // Visual feedback
       const fullscreenBtn = document.querySelector('.fullscreen-btn');
-      fullscreenBtn.style.background = 'rgba(124, 58, 237, 0.8)';
+      fullscreenBtn.classList.add('active');
       setTimeout(() => {
-        fullscreenBtn.style.background = 'rgba(255, 255, 255, 0.1)';
-      }, 300);
+        fullscreenBtn.classList.remove('active');
+      }, 500);
     }
 
     // Handle fullscreen change
