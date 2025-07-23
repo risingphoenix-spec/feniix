@@ -196,6 +196,57 @@
       background: rgba(124, 58, 237, 0.8);
       border-color: rgba(124, 58, 237, 0.5);
     }
+    .download-modal {
+      position: absolute;
+      top: 40px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.95);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      z-index: 20;
+      min-width: 200px;
+    }
+    .download-content h3 {
+      margin: 0 0 12px 0;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .quality-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .quality-btn {
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s ease;
+    }
+    .quality-btn:hover {
+      background: rgba(124, 58, 237, 0.6);
+      border-color: rgba(124, 58, 237, 0.8);
+    }
+    .close-btn {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .close-btn:hover {
+      background: rgba(239, 68, 68, 0.6);
+    }
     .video {
       display: flex;
       flex-direction: column;
