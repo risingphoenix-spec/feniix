@@ -318,24 +318,41 @@ function setVideo(element) {
   const video = document.getElementById(PLAYER_CONFIG.videoContainerId);
 
   // Get both server URLs
-  const vidsrcUrl = element.getAttribute("href"); // Current vidsrc URL
-  const embedUrl = element.getAttribute("data-embed-url") || element.getAttribute("href"); // 2embed URL
+  const embedUrl = element.getAttribute("href"); // Current 2embed URL
+  const imdbId = element.getAttribute("IMDB");
+  const isWebSeries = element.getAttribute("isWebSeries");
 
-  // Store both URLs for server switching
+  // Create VidSrc URL based on IMDB ID
+  let vidsrcUrl = '';
+  if (isWebSeries === "true") {
+    const searchParams = new URLSearchParams(window.location.search);
+    const season = searchParams.get("season") || "1";
+    const episode = searchParams.get("episode") || "1";
+    vidsrcUrl = `https://vidsrc.su/embed/tv/${imdbId}/${season}/${episode}`;
+  } else {
+    vidsrcUrl = `https://vidsrc.su/embed/movie/${imdbId}`;
+  }
+
+  // Store both URLs for server switching - make sure this runs immediately
+  window.currentVideoData = {
+    vidsrcUrl: vidsrcUrl,
+    embedUrl: embedUrl,
+    imdbId: imdbId,
+    isWebSeries: isWebSeries
+  };
+
+  // Also call the storeVideoData function if it exists
   if (typeof storeVideoData === 'function') {
     storeVideoData(vidsrcUrl, embedUrl);
   }
 
-  iframe.src = vidsrcUrl;
+  iframe.src = embedUrl; // Start with 2embed by default
   video.style.display = "block";
 
-  // Reset server indicator
-  if (typeof currentServer !== 'undefined') {
-    currentServer = 'vidsrc';
-    const serverIndicator = document.getElementById('current-server');
-    if (serverIndicator) {
-      serverIndicator.textContent = 'VidSrc';
-    }
+  // Reset server button text
+  const serverBtn = document.querySelector('.server-btn');
+  if (serverBtn) {
+    serverBtn.textContent = '2Embed';
   }
   const webSeriesData = document.getElementById("webSeriesData");
   const tmdbApiKey = "b6b677eb7d4ec17f700e3d4dfc31d005";
