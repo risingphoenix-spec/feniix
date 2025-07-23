@@ -305,6 +305,7 @@ async function setAll(imdb, title, season, episode, type) {
       "href",
       PLAYER_CONFIG.embedTvUrl(tmdbId, season, episode)
     );
+    a.setAttribute("data-embed-url", `https://www.2embed.cc/embedtv/${imdb}&s=${season}&e=${episode}`);
     a.setAttribute("target", "_blank");
     a.click();
   }
