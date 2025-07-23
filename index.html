@@ -549,6 +549,39 @@
       </section>
     </div>
 
+    <div id="movies-content" class="nav-content">
+      <section class="content-section">
+        <h2>Popular Movies</h2>
+        <div class="search-container">
+          <input type="search" id="movies-search" placeholder="Search movies..." class="page-search">
+          <button onclick="searchMovies()" class="search-btn">Search</button>
+        </div>
+        <div id="movies-results" class="content-grid"></div>
+      </section>
+    </div>
+
+    <div id="tv-content" class="nav-content">
+      <section class="content-section">
+        <h2>Popular TV Shows</h2>
+        <div class="search-container">
+          <input type="search" id="tv-search" placeholder="Search TV shows..." class="page-search">
+          <button onclick="searchTVShows()" class="search-btn">Search</button>
+        </div>
+        <div id="tv-results" class="content-grid"></div>
+      </section>
+    </div>
+
+    <div id="trending-content" class="nav-content">
+      <section class="content-section">
+        <h2>Trending Now</h2>
+        <div class="trending-tabs">
+          <button class="trend-tab active" onclick="loadTrending('movie')">Movies</button>
+          <button class="trend-tab" onclick="loadTrending('tv')">TV Shows</button>
+        </div>
+        <div id="trending-results" class="content-grid"></div>
+      </section>
+    </div>
+
     <div id="history-content" class="nav-content">
       <section class="history-section">
         <div class="history-header">
