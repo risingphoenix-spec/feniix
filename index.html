@@ -1057,6 +1057,155 @@
       }
     }
 
+    // Multi-page content functions
+    const tmdbApiKey = "b6b677eb7d4ec17f700e3d4dfc31d005";
+
+    async function loadPopularMovies() {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${tmdbApiKey}&language=en-US&page=1`);
+        const data = await response.json();
+        displayMovieGrid(data.results, 'movies-results');
+      } catch (error) {
+        console.error('Error loading popular movies:', error);
+      }
+    }
+
+    async function loadPopularTVShows() {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/popular?api_key=${tmdbApiKey}&language=en-US&page=1`);
+        const data = await response.json();
+        displayTVGrid(data.results, 'tv-results');
+      } catch (error) {
+        console.error('Error loading popular TV shows:', error);
+      }
+    }
+
+    async function loadTrending(type) {
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/trending/${type}/week?api_key=${tmdbApiKey}`);
+        const data = await response.json();
+
+        if (type === 'movie') {
+          displayMovieGrid(data.results, 'trending-results');
+        } else {
+          displayTVGrid(data.results, 'trending-results');
+        }
+
+        // Update tab states
+        document.querySelectorAll('.trend-tab').forEach(tab => tab.classList.remove('active'));
+        if (event && event.target) event.target.classList.add('active');
+      } catch (error) {
+        console.error('Error loading trending content:', error);
+      }
+    }
+
+    function displayMovieGrid(movies, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      movies.forEach(movie => {
+        if (movie.poster_path) {
+          const movieCard = document.createElement('div');
+          movieCard.className = 'movie-card';
+          movieCard.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title}" onclick="playMovie('${movie.id}', '${movie.title.replace(/'/g, '')}')">
+            <h4>${movie.title}</h4>
+            <p>${movie.release_date ? movie.release_date.split('-')[0] : 'N/A'}</p>
+          `;
+          container.appendChild(movieCard);
+        }
+      });
+    }
+
+    function displayTVGrid(shows, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      shows.forEach(show => {
+        if (show.poster_path) {
+          const showCard = document.createElement('div');
+          showCard.className = 'movie-card';
+          showCard.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/w300${show.poster_path}" alt="${show.name}" onclick="playTVShow('${show.id}', '${show.name.replace(/'/g, '')}')">
+            <h4>${show.name}</h4>
+            <p>${show.first_air_date ? show.first_air_date.split('-')[0] : 'N/A'}</p>
+          `;
+          container.appendChild(showCard);
+        }
+      });
+    }
+
+    async function playMovie(tmdbId, title) {
+      showTab('home');
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/movie/${tmdbId}/external_ids?api_key=${tmdbApiKey}`);
+        const data = await response.json();
+        const imdbId = data.imdb_id;
+
+        if (imdbId) {
+          const url = `imdb=${imdbId}&type=movie&title=${title.replace(/ /g, '_')}`;
+          window.history.replaceState({}, '', `?${url}`);
+          fillSearchInput();
+        }
+      } catch (error) {
+        console.error('Error getting IMDB ID:', error);
+      }
+    }
+
+    async function playTVShow(tmdbId, title) {
+      showTab('home');
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${tmdbId}/external_ids?api_key=${tmdbApiKey}`);
+        const data = await response.json();
+        const imdbId = data.imdb_id;
+
+        if (imdbId) {
+          const url = `imdb=${imdbId}&season=1&episode=1&title=${title.replace(/ /g, '_')}`;
+          window.history.replaceState({}, '', `?${url}`);
+          fillSearchInput();
+        }
+      } catch (error) {
+        console.error('Error getting IMDB ID:', error);
+      }
+    }
+
+    async function searchMovies() {
+      const query = document.getElementById('movies-search').value;
+      if (!query) return;
+
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=${tmdbApiKey}&language=en-US&query=${encodeURIComponent(query)}&page=1`);
+        const data = await response.json();
+        displayMovieGrid(data.results, 'movies-results');
+      } catch (error) {
+        console.error('Error searching movies:', error);
+      }
+    }
+
+    async function searchTVShows() {
+      const query = document.getElementById('tv-search').value;
+      if (!query) return;
+
+      try {
+        const response = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${tmdbApiKey}&language=en-US&query=${encodeURIComponent(query)}&page=1`);
+        const data = await response.json();
+        displayTVGrid(data.results, 'tv-results');
+      } catch (error) {
+        console.error('Error searching TV shows:', error);
+      }
+    }
+
+    // Add Enter key support for search
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        if (e.target.id === 'movies-search') {
+          searchMovies();
+        } else if (e.target.id === 'tv-search') {
+          searchTVShows();
+        }
+      }
+    });
+
     // Prevent any auto-scroll to top on SPA navigation or search
     window.scrollTo = function(){};
     // If any code tries to scroll to top, this disables it globally
