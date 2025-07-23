@@ -779,33 +779,30 @@
     let languages = ['EN', 'ES', 'FR', 'DE'];
 
     function switchServer() {
-      // Check both local and global currentVideoData
-      const videoData = currentVideoData || window.currentVideoData;
+      // Check for video data in multiple places
+      const videoData = window.currentVideoData || window.globalVideoData || currentVideoData;
+
       if (!videoData) {
-        alert('Please select a movie or show first');
+        alert('Please select a movie or show first from the Search tab');
         return;
       }
 
-      // Cycle through servers
-      let serverIndex = servers.findIndex(s => document.querySelector('.server-btn').textContent === s);
-      serverIndex = (serverIndex + 1) % servers.length;
+      console.log('Server switch - Using video data:', videoData); // Debug
 
       const iframe = document.getElementById('iframe');
       const serverBtn = document.querySelector('.server-btn');
+      const currentServer = serverBtn.textContent;
 
-      serverBtn.textContent = servers[serverIndex];
-
-      // Switch between different embed sources
-      switch(serverIndex) {
-        case 0: // VidSrc
-          iframe.src = videoData.vidsrcUrl;
-          break;
-        case 1: // 2Embed
-          iframe.src = videoData.embedUrl;
-          break;
-        case 2: // SuperEmbed (alternative)
-          iframe.src = videoData.vidsrcUrl.replace('vidsrc.su', 'vidsrc.me');
-          break;
+      // Switch between servers
+      if (currentServer === '2Embed') {
+        iframe.src = videoData.vidsrcUrl;
+        serverBtn.textContent = 'VidSrc';
+      } else if (currentServer === 'VidSrc') {
+        iframe.src = videoData.vidsrcUrl.replace('vidsrc.su', 'vidsrc.me');
+        serverBtn.textContent = 'VidSrc.me';
+      } else {
+        iframe.src = videoData.embedUrl;
+        serverBtn.textContent = '2Embed';
       }
 
       // Visual feedback
