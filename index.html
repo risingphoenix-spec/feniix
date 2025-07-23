@@ -714,6 +714,11 @@
     }
 
     function switchLanguage() {
+      if (!currentVideoData) {
+        alert('Please select a movie or show first');
+        return;
+      }
+
       let langIndex = languages.indexOf(currentLanguage);
       langIndex = (langIndex + 1) % languages.length;
       currentLanguage = languages[langIndex];
@@ -721,24 +726,41 @@
       const langBtn = document.querySelector('.lang-btn');
       langBtn.textContent = currentLanguage;
 
-      // If we have video data, modify URL to include language preference
-      if (currentVideoData) {
-        const iframe = document.getElementById('iframe');
-        let currentSrc = iframe.src;
+      // Get current server and rebuild URL with language
+      const iframe = document.getElementById('iframe');
+      let newSrc = '';
 
-        // Add or update language parameter in the URL
-        if (currentSrc.includes('?')) {
-          if (currentSrc.includes('lang=')) {
-            currentSrc = currentSrc.replace(/lang=[^&]*/, `lang=${currentLanguage.toLowerCase()}`);
+      if (iframe.src.includes('vidsrc')) {
+        // For VidSrc, add language parameter
+        newSrc = currentVideoData.vidsrcUrl;
+        if (newSrc.includes('?')) {
+          newSrc += `&lang=${currentLanguage.toLowerCase()}`;
+        } else {
+          newSrc += `?lang=${currentLanguage.toLowerCase()}`;
+        }
+      } else if (iframe.src.includes('2embed')) {
+        // For 2Embed, use different language parameter
+        newSrc = currentVideoData.embedUrl;
+        if (newSrc.includes('?')) {
+          newSrc += `&audio=${currentLanguage.toLowerCase()}`;
+        } else {
+          newSrc += `?audio=${currentLanguage.toLowerCase()}`;
+        }
+      } else {
+        // Fallback - just add language parameter
+        newSrc = iframe.src;
+        if (newSrc.includes('?')) {
+          if (newSrc.includes('lang=') || newSrc.includes('audio=')) {
+            newSrc = newSrc.replace(/(lang|audio)=[^&]*/, `lang=${currentLanguage.toLowerCase()}`);
           } else {
-            currentSrc += `&lang=${currentLanguage.toLowerCase()}`;
+            newSrc += `&lang=${currentLanguage.toLowerCase()}`;
           }
         } else {
-          currentSrc += `?lang=${currentLanguage.toLowerCase()}`;
+          newSrc += `?lang=${currentLanguage.toLowerCase()}`;
         }
-
-        iframe.src = currentSrc;
       }
+
+      iframe.src = newSrc;
 
       // Visual feedback
       langBtn.classList.add('active');
@@ -746,6 +768,84 @@
         langBtn.classList.remove('active');
       }, 500);
     }
+
+    function showDownloadOptions() {
+      if (!currentVideoData) {
+        alert('Please select a movie or show first');
+        return;
+      }
+
+      const modal = document.getElementById('download-modal');
+      modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+
+      // Visual feedback
+      const downloadBtn = document.querySelector('.download-btn');
+      downloadBtn.classList.add('active');
+      setTimeout(() => {
+        downloadBtn.classList.remove('active');
+      }, 500);
+    }
+
+    function hideDownloadOptions() {
+      document.getElementById('download-modal').style.display = 'none';
+    }
+
+    function downloadVideo(quality) {
+      if (!currentVideoData) {
+        alert('Please select a movie or show first');
+        return;
+      }
+
+      // Get current video information
+      const searchParams = new URLSearchParams(window.location.search);
+      const imdb = searchParams.get('imdb');
+      const title = searchParams.get('title') || 'video';
+      const season = searchParams.get('season');
+      const episode = searchParams.get('episode');
+
+      // Create download URLs for different qualities
+      let downloadUrl = '';
+
+      if (season && episode) {
+        // TV Series download
+        downloadUrl = `https://dl.vidsrc.vip/tv/${imdb}/${season}/${episode}/${quality}`;
+      } else {
+        // Movie download
+        downloadUrl = `https://dl.vidsrc.vip/movie/${imdb}/${quality}`;
+      }
+
+      // Try to trigger download
+      try {
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `${title}_${quality}.mp4`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Show success message
+        alert(`Download started for ${quality} quality. If download doesn't start automatically, the link will open in a new tab.`);
+      } catch (error) {
+        // Fallback - open in new window
+        window.open(downloadUrl, '_blank');
+        alert(`Download link opened in new tab for ${quality} quality.`);
+      }
+
+      hideDownloadOptions();
+    }
+
+    // Close download modal when clicking outside
+    document.addEventListener('click', function(event) {
+      const modal = document.getElementById('download-modal');
+      const downloadBtn = document.querySelector('.download-btn');
+
+      if (modal && modal.style.display === 'block' &&
+          !modal.contains(event.target) &&
+          !downloadBtn.contains(event.target)) {
+        hideDownloadOptions();
+      }
+    });
 
     function refreshPlayer() {
       const iframe = document.getElementById('iframe');
