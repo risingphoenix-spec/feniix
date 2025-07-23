@@ -314,6 +314,22 @@ async function setAll(imdb, title, season, episode, type) {
 // fetch and set video
 
 function setVideo(element) {
+  // Switch to player tab first
+  if (typeof showTab === 'function') {
+    // Find and click the player tab
+    const playerTab = document.querySelector('.nav-item[onclick*="player"]');
+    if (playerTab) {
+      document.querySelectorAll('.nav-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.getElementById('player-content').classList.add('active');
+      playerTab.classList.add('active');
+    }
+  }
+
   const iframe = document.getElementById(PLAYER_CONFIG.iframeId);
   const video = document.getElementById(PLAYER_CONFIG.videoContainerId);
 
@@ -321,6 +337,7 @@ function setVideo(element) {
   const embedUrl = element.getAttribute("href"); // Current 2embed URL
   const imdbId = element.getAttribute("IMDB");
   const isWebSeries = element.getAttribute("isWebSeries");
+  const title = element.getAttribute("title");
 
   // Create VidSrc URL based on IMDB ID
   let vidsrcUrl = '';
@@ -333,17 +350,18 @@ function setVideo(element) {
     vidsrcUrl = `https://vidsrc.su/embed/movie/${imdbId}`;
   }
 
-  // Store both URLs for server switching - make sure this runs immediately
+  // Store video data globally - this is critical for download/server switching
   window.currentVideoData = {
     vidsrcUrl: vidsrcUrl,
     embedUrl: embedUrl,
     imdbId: imdbId,
-    isWebSeries: isWebSeries
+    isWebSeries: isWebSeries,
+    title: title
   };
 
-  // Also call the storeVideoData function if it exists
-  if (typeof storeVideoData === 'function') {
-    storeVideoData(vidsrcUrl, embedUrl);
+  // Also set it for any other references
+  if (typeof window !== 'undefined') {
+    window.globalVideoData = window.currentVideoData;
   }
 
   iframe.src = embedUrl; // Start with 2embed by default
@@ -354,6 +372,8 @@ function setVideo(element) {
   if (serverBtn) {
     serverBtn.textContent = '2Embed';
   }
+
+  console.log('Video data stored:', window.currentVideoData); // Debug log
   const webSeriesData = document.getElementById("webSeriesData");
   const tmdbApiKey = "b6b677eb7d4ec17f700e3d4dfc31d005";
   const imdbID = element.getAttribute("IMDB");
