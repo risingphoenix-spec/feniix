@@ -897,47 +897,69 @@
     }
 
     function downloadVideo(quality) {
-      // Check both local and global currentVideoData
-      const videoData = currentVideoData || window.currentVideoData;
+      // Check for video data in multiple places
+      const videoData = window.currentVideoData || window.globalVideoData || currentVideoData;
+
       if (!videoData) {
-        alert('Please select a movie or show first');
+        alert('Please select a movie or show first from the Search tab');
         return;
       }
 
+      console.log('Download - Using video data:', videoData); // Debug
+
       // Get current video information
       const searchParams = new URLSearchParams(window.location.search);
-      const imdb = searchParams.get('imdb');
-      const title = searchParams.get('title') || 'video';
+      const imdb = videoData.imdbId || searchParams.get('imdb');
+      const title = videoData.title || searchParams.get('title') || 'video';
       const season = searchParams.get('season');
       const episode = searchParams.get('episode');
 
-      // Create download URLs for different qualities
-      let downloadUrl = '';
+      // Create multiple download URL options
+      let downloadUrls = [];
 
       if (season && episode) {
-        // TV Series download
-        downloadUrl = `https://dl.vidsrc.vip/tv/${imdb}/${season}/${episode}/${quality}`;
+        // TV Series download URLs
+        downloadUrls = [
+          `https://dl.vidsrc.me/tv/${imdb}/${season}/${episode}/${quality}`,
+          `https://vidsrc.su/api/v1/episodes/${imdb}/${season}/${episode}/${quality}`,
+          `https://2embed.cc/download/tv/${imdb}/${season}/${episode}/${quality}`,
+          `https://multiembed.mov/download/tv/${imdb}/${season}/${episode}`
+        ];
       } else {
-        // Movie download
-        downloadUrl = `https://dl.vidsrc.vip/movie/${imdb}/${quality}`;
+        // Movie download URLs
+        downloadUrls = [
+          `https://dl.vidsrc.me/movie/${imdb}/${quality}`,
+          `https://vidsrc.su/api/v1/movie/${imdb}/${quality}`,
+          `https://2embed.cc/download/movie/${imdb}/${quality}`,
+          `https://multiembed.mov/download/movie/${imdb}`
+        ];
       }
 
-      // Try to trigger download
-      try {
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = `${title}_${quality}.mp4`;
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+      // Try each download URL
+      let downloadStarted = false;
 
-        // Show success message
-        alert(`Download started for ${quality} quality. If download doesn't start automatically, the link will open in a new tab.`);
-      } catch (error) {
-        // Fallback - open in new window
-        window.open(downloadUrl, '_blank');
-        alert(`Download link opened in new tab for ${quality} quality.`);
+      for (let i = 0; i < downloadUrls.length; i++) {
+        try {
+          const link = document.createElement('a');
+          link.href = downloadUrls[i];
+          link.download = `${title}_${quality}.mp4`;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          downloadStarted = true;
+          break;
+        } catch (error) {
+          console.log(`Download URL ${i + 1} failed:`, error);
+        }
+      }
+
+      if (downloadStarted) {
+        alert(`Download started for ${quality} quality. Check your downloads folder or new tab.`);
+      } else {
+        // Fallback - show all URLs for manual access
+        const urlList = downloadUrls.map((url, index) => `${index + 1}. ${url}`).join('\n');
+        alert(`Auto-download failed. Try these URLs manually:\n\n${urlList}`);
       }
 
       hideDownloadOptions();
