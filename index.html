@@ -447,12 +447,27 @@
               <button class="simple-btn lang-btn" onclick="switchLanguage()" title="Language">
                 EN
               </button>
+              <button class="simple-btn download-btn" onclick="showDownloadOptions()" title="Download">
+                ⬇
+              </button>
               <button class="simple-btn refresh-btn" onclick="refreshPlayer()" title="Refresh">
                 ↻
               </button>
               <button class="simple-btn fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">
                 ⛶
               </button>
+            </div>
+            <div id="download-modal" class="download-modal" style="display: none;">
+              <div class="download-content">
+                <h3>Download Options</h3>
+                <div class="quality-options">
+                  <button class="quality-btn" onclick="downloadVideo('720p')">720p HD</button>
+                  <button class="quality-btn" onclick="downloadVideo('480p')">480p SD</button>
+                  <button class="quality-btn" onclick="downloadVideo('360p')">360p</button>
+                  <button class="quality-btn" onclick="downloadVideo('1080p')">1080p FHD</button>
+                </div>
+                <button class="close-btn" onclick="hideDownloadOptions()">Close</button>
+              </div>
             </div>
           </div>
           <p class="phoenix-info">Use the controls above to switch servers or go fullscreen. If you experience issues, try refreshing the player.</p>
