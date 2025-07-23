@@ -813,10 +813,11 @@
     }
 
     function switchLanguage() {
-      // Check both local and global currentVideoData
-      const videoData = currentVideoData || window.currentVideoData;
+      // Check for video data in multiple places
+      const videoData = window.currentVideoData || window.globalVideoData || currentVideoData;
+
       if (!videoData) {
-        alert('Please select a movie or show first');
+        alert('Please select a movie or show first from the Search tab');
         return;
       }
 
