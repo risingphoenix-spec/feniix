@@ -687,9 +687,15 @@
       // Add active class to clicked nav item
       event.target.classList.add('active');
 
-      // Load history if history tab is clicked
+      // Load content based on tab
       if (tabName === 'history') {
         loadHistory();
+      } else if (tabName === 'movies') {
+        loadPopularMovies();
+      } else if (tabName === 'tv') {
+        loadPopularTVShows();
+      } else if (tabName === 'trending') {
+        loadTrending('movie');
       }
     }
 
