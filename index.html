@@ -575,7 +575,7 @@
     </nav>
   </header>
   <main class="phoenix-main">
-    <div id="home-content" class="nav-content active">
+    <div id="search-content" class="nav-content active">
       <section class="phoenix-hero">
         <h1>Welcome to <span class="phoenix-gradient">Phoenix</span></h1>
         <h2 class="phoenix-tagline">Stream. Search. Rise Above.</h2>
@@ -584,13 +584,35 @@
           <button id="search-button" type="button">Search</button>
         </form>
       </section>
+      <section id="results" class="phoenix-results"></section>
+      <section class="phoenix-info-section">
+        <h2>About Phoenix</h2>
+        <p>Your ultimate destination for movies and TV shows. Fast, free, and built for entertainment lovers.</p>
+        <div class="phoenix-features">
+          <div class="feature-card">
+            <h3>🎬 Vast Library</h3>
+            <p>Access thousands of movies and shows</p>
+          </div>
+          <div class="feature-card">
+            <h3>⚡ Lightning Fast</h3>
+            <p>Instant search and smooth streaming</p>
+          </div>
+          <div class="feature-card">
+            <h3>🆓 Completely Free</h3>
+            <p>No subscriptions, no hidden fees</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="player-content" class="nav-content">
       <section class="phoenix-video-section">
         <div id="video" class="video">
           <div class="player-container">
             <iframe id="iframe" scrolling="no" src="" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="width:100%;min-height:340px;border-radius:12px;"></iframe>
             <div class="player-controls">
               <button class="simple-btn server-btn" onclick="switchServer()" title="Switch Server">
-                Server
+                2Embed
               </button>
               <button class="simple-btn lang-btn" onclick="switchLanguage()" title="Language">
                 EN
@@ -621,58 +643,6 @@
           <p class="phoenix-info">Use the controls above to switch servers, change language, download, or go fullscreen. Click directly on the video player for pause/play controls. If you experience issues, try refreshing or switching servers.</p>
           <div id="webSeriesData"></div>
         </div>
-      </section>
-      <section id="results" class="phoenix-results"></section>
-      <section class="phoenix-info-section">
-        <h2>About Phoenix</h2>
-        <p>Your ultimate destination for movies and TV shows. Fast, free, and built for entertainment lovers.</p>
-        <div class="phoenix-features">
-          <div class="feature-card">
-            <h3>🎬 Vast Library</h3>
-            <p>Access thousands of movies and shows</p>
-          </div>
-          <div class="feature-card">
-            <h3>⚡ Lightning Fast</h3>
-            <p>Instant search and smooth streaming</p>
-          </div>
-          <div class="feature-card">
-            <h3>🆓 Completely Free</h3>
-            <p>No subscriptions, no hidden fees</p>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <div id="movies-content" class="nav-content">
-      <section class="content-section">
-        <h2>Popular Movies</h2>
-        <div class="search-container">
-          <input type="search" id="movies-search" placeholder="Search movies..." class="page-search">
-          <button onclick="searchMovies()" class="search-btn">Search</button>
-        </div>
-        <div id="movies-results" class="content-grid"></div>
-      </section>
-    </div>
-
-    <div id="tv-content" class="nav-content">
-      <section class="content-section">
-        <h2>Popular TV Shows</h2>
-        <div class="search-container">
-          <input type="search" id="tv-search" placeholder="Search TV shows..." class="page-search">
-          <button onclick="searchTVShows()" class="search-btn">Search</button>
-        </div>
-        <div id="tv-results" class="content-grid"></div>
-      </section>
-    </div>
-
-    <div id="trending-content" class="nav-content">
-      <section class="content-section">
-        <h2>Trending Now</h2>
-        <div class="trending-tabs">
-          <button class="trend-tab active" onclick="loadTrending('movie')">Movies</button>
-          <button class="trend-tab" onclick="loadTrending('tv')">TV Shows</button>
-        </div>
-        <div id="trending-results" class="content-grid"></div>
       </section>
     </div>
 
