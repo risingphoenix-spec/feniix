@@ -283,6 +283,7 @@ async function setAll(imdb, title, season, episode, type) {
     a.setAttribute("class", "links");
     a.setAttribute("IMDB", imdb);
     a.setAttribute("href", PLAYER_CONFIG.embedMovieUrl(tmdbId));
+    a.setAttribute("data-embed-url", `https://www.2embed.cc/embed/${imdb}`);
     a.setAttribute("target", "_blank");
     a.click();
   } else if (imdb && title && episode && !type) {
