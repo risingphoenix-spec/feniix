@@ -339,6 +339,26 @@ function setVideo(element) {
     document.title = element.getAttribute("title");
   }
 
+  // Save to history
+  const title = element.getAttribute("title");
+  const imdb = element.getAttribute("IMDB");
+  const isWebSeries = element.getAttribute("isWebSeries");
+  let season = null;
+  let episode = null;
+  let type = null;
+
+  if (isWebSeries === "true") {
+    const searchParams = new URLSearchParams(window.location.search);
+    season = searchParams.get("season");
+    episode = searchParams.get("episode");
+  } else {
+    type = "movie";
+  }
+
+  if (title && imdb && typeof saveToHistory === 'function') {
+    saveToHistory(title, imdb, type, season, episode);
+  }
+
   // highlight selected webseries episode
 
   if (element.className.includes("episode")) {
