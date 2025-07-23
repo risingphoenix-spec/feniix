@@ -752,12 +752,26 @@
       }
     });
 
+    document.addEventListener('webkitfullscreenchange', function() {
+      const iframe = document.getElementById('iframe');
+      if (!document.webkitFullscreenElement) {
+        iframe.style.height = '340px';
+        iframe.style.borderRadius = '12px';
+      }
+    });
+
     // Store video data for server switching
     function storeVideoData(vidsrcUrl, embedUrl) {
       currentVideoData = {
         vidsrcUrl: vidsrcUrl,
         embedUrl: embedUrl
       };
+
+      // Reset server button text
+      const serverBtn = document.querySelector('.server-btn');
+      if (serverBtn) {
+        serverBtn.textContent = 'VidSrc';
+      }
     }
 
     // Prevent any auto-scroll to top on SPA navigation or search
