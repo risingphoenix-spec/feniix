@@ -448,7 +448,7 @@
                 EN
               </button>
               <button class="simple-btn refresh-btn" onclick="refreshPlayer()" title="Refresh">
-                ��
+                ↻
               </button>
               <button class="simple-btn fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen">
                 ⛶
@@ -606,31 +606,79 @@
     }
 
     // Player control functions
-    let currentServer = 'vidsrc'; // 'vidsrc' or '2embed'
+    let currentServer = 'server1'; // 'server1', 'server2', 'server3'
+    let currentLanguage = 'EN'; // 'EN', 'ES', 'FR', 'DE'
     let currentVideoData = null;
+    let servers = ['VidSrc', '2Embed', 'SuperEmbed'];
+    let languages = ['EN', 'ES', 'FR', 'DE'];
 
     function switchServer() {
-      if (!currentVideoData) return;
+      if (!currentVideoData) {
+        alert('Please select a movie or show first');
+        return;
+      }
 
-      currentServer = currentServer === 'vidsrc' ? '2embed' : 'vidsrc';
+      // Cycle through servers
+      let serverIndex = servers.findIndex(s => document.querySelector('.server-btn').textContent === s);
+      serverIndex = (serverIndex + 1) % servers.length;
 
       const iframe = document.getElementById('iframe');
-      const serverIndicator = document.getElementById('current-server');
+      const serverBtn = document.querySelector('.server-btn');
 
-      if (currentServer === 'vidsrc') {
-        iframe.src = currentVideoData.vidsrcUrl;
-        serverIndicator.textContent = 'VidSrc';
-      } else {
-        iframe.src = currentVideoData.embedUrl;
-        serverIndicator.textContent = '2Embed';
+      serverBtn.textContent = servers[serverIndex];
+
+      // Switch between different embed sources
+      switch(serverIndex) {
+        case 0: // VidSrc
+          iframe.src = currentVideoData.vidsrcUrl;
+          break;
+        case 1: // 2Embed
+          iframe.src = currentVideoData.embedUrl;
+          break;
+        case 2: // SuperEmbed (alternative)
+          iframe.src = currentVideoData.vidsrcUrl.replace('vidsrc.su', 'vidsrc.me');
+          break;
       }
 
       // Visual feedback
-      const serverBtn = document.querySelector('.server-btn');
-      serverBtn.style.background = 'rgba(124, 58, 237, 0.8)';
+      serverBtn.classList.add('active');
       setTimeout(() => {
-        serverBtn.style.background = 'rgba(255, 255, 255, 0.1)';
-      }, 300);
+        serverBtn.classList.remove('active');
+      }, 500);
+    }
+
+    function switchLanguage() {
+      let langIndex = languages.indexOf(currentLanguage);
+      langIndex = (langIndex + 1) % languages.length;
+      currentLanguage = languages[langIndex];
+
+      const langBtn = document.querySelector('.lang-btn');
+      langBtn.textContent = currentLanguage;
+
+      // If we have video data, modify URL to include language preference
+      if (currentVideoData) {
+        const iframe = document.getElementById('iframe');
+        let currentSrc = iframe.src;
+
+        // Add or update language parameter in the URL
+        if (currentSrc.includes('?')) {
+          if (currentSrc.includes('lang=')) {
+            currentSrc = currentSrc.replace(/lang=[^&]*/, `lang=${currentLanguage.toLowerCase()}`);
+          } else {
+            currentSrc += `&lang=${currentLanguage.toLowerCase()}`;
+          }
+        } else {
+          currentSrc += `?lang=${currentLanguage.toLowerCase()}`;
+        }
+
+        iframe.src = currentSrc;
+      }
+
+      // Visual feedback
+      langBtn.classList.add('active');
+      setTimeout(() => {
+        langBtn.classList.remove('active');
+      }, 500);
     }
 
     function refreshPlayer() {
