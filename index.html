@@ -377,40 +377,56 @@
     </nav>
   </header>
   <main class="phoenix-main">
-    <section class="phoenix-hero">
-      <h1>Welcome to <span class="phoenix-gradient">Phoenix</span></h1>
-      <h2 class="phoenix-tagline">Stream. Search. Rise Above.</h2>
-      <form class="phoenix-search-container" onsubmit="event.preventDefault(); document.getElementById('search-button').click();">
-        <input type="search" id="search-input" placeholder="Search any Movie, Webseries, or Anime" autocomplete="off">
-        <button id="search-button" type="button">Search</button>
-      </form>
-    </section>
-    <section class="phoenix-video-section">
-      <div id="video" class="video">
-        <iframe id="iframe" scrolling="no" src="" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="width:100%;min-height:340px;border-radius:1rem;"></iframe>
-        <p class="phoenix-info">If you experience errors or buffering, click the movie poster below or switch the player in the top right corner.</p>
-        <div id="webSeriesData"></div>
-      </div>
-    </section>
-    <section id="results" class="phoenix-results"></section>
-    <section class="phoenix-info-section">
-      <h2>About Phoenix</h2>
-      <p>Your ultimate destination for movies and TV shows. Fast, free, and built for entertainment lovers.</p>
-      <div class="phoenix-features">
-        <div class="feature-card">
-          <h3>🎬 Vast Library</h3>
-          <p>Access thousands of movies and shows</p>
+    <div id="home-content" class="nav-content active">
+      <section class="phoenix-hero">
+        <h1>Welcome to <span class="phoenix-gradient">Phoenix</span></h1>
+        <h2 class="phoenix-tagline">Stream. Search. Rise Above.</h2>
+        <form class="phoenix-search-container" onsubmit="event.preventDefault(); document.getElementById('search-button').click();">
+          <input type="search" id="search-input" placeholder="Search any Movie, Webseries, or Anime" autocomplete="off">
+          <button id="search-button" type="button">Search</button>
+        </form>
+      </section>
+      <section class="phoenix-video-section">
+        <div id="video" class="video">
+          <iframe id="iframe" scrolling="no" src="" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="width:100%;min-height:340px;border-radius:16px;"></iframe>
+          <p class="phoenix-info">If you experience errors or buffering, click the movie poster below or switch the player in the top right corner.</p>
+          <div id="webSeriesData"></div>
         </div>
-        <div class="feature-card">
-          <h3>⚡ Lightning Fast</h3>
-          <p>Instant search and smooth streaming</p>
+      </section>
+      <section id="results" class="phoenix-results"></section>
+      <section class="phoenix-info-section">
+        <h2>About Phoenix</h2>
+        <p>Your ultimate destination for movies and TV shows. Fast, free, and built for entertainment lovers.</p>
+        <div class="phoenix-features">
+          <div class="feature-card">
+            <h3>🎬 Vast Library</h3>
+            <p>Access thousands of movies and shows</p>
+          </div>
+          <div class="feature-card">
+            <h3>⚡ Lightning Fast</h3>
+            <p>Instant search and smooth streaming</p>
+          </div>
+          <div class="feature-card">
+            <h3>🆓 Completely Free</h3>
+            <p>No subscriptions, no hidden fees</p>
+          </div>
         </div>
-        <div class="feature-card">
-          <h3>🆓 Completely Free</h3>
-          <p>No subscriptions, no hidden fees</p>
+      </section>
+    </div>
+
+    <div id="history-content" class="nav-content">
+      <section class="history-section">
+        <div class="history-header">
+          <h2>Watch History</h2>
+          <button class="clear-history" onclick="clearHistory()">Clear All</button>
         </div>
-      </div>
-    </section>
+        <div id="history-grid" class="history-grid">
+          <div class="empty-history">
+            <p>No watch history yet. Start watching something to see it here!</p>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
   <footer class="phoenix-footer">
     <span>&copy; 2025 Phoenix. All rights reserved.</span>
