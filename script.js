@@ -313,8 +313,27 @@ async function setAll(imdb, title, season, episode, type) {
 function setVideo(element) {
   const iframe = document.getElementById(PLAYER_CONFIG.iframeId);
   const video = document.getElementById(PLAYER_CONFIG.videoContainerId);
-  iframe.src = element.getAttribute("href");
+
+  // Get both server URLs
+  const vidsrcUrl = element.getAttribute("href"); // Current vidsrc URL
+  const embedUrl = element.getAttribute("data-embed-url") || element.getAttribute("href"); // 2embed URL
+
+  // Store both URLs for server switching
+  if (typeof storeVideoData === 'function') {
+    storeVideoData(vidsrcUrl, embedUrl);
+  }
+
+  iframe.src = vidsrcUrl;
   video.style.display = "block";
+
+  // Reset server indicator
+  if (typeof currentServer !== 'undefined') {
+    currentServer = 'vidsrc';
+    const serverIndicator = document.getElementById('current-server');
+    if (serverIndicator) {
+      serverIndicator.textContent = 'VidSrc';
+    }
+  }
   const webSeriesData = document.getElementById("webSeriesData");
   const tmdbApiKey = "b6b677eb7d4ec17f700e3d4dfc31d005";
   const imdbID = element.getAttribute("IMDB");
