@@ -631,6 +631,103 @@
       }
     }
 
+    // Player control functions
+    let currentServer = 'vidsrc'; // 'vidsrc' or '2embed'
+    let currentVideoData = null;
+
+    function switchServer() {
+      if (!currentVideoData) return;
+
+      currentServer = currentServer === 'vidsrc' ? '2embed' : 'vidsrc';
+
+      const iframe = document.getElementById('iframe');
+      const serverIndicator = document.getElementById('current-server');
+
+      if (currentServer === 'vidsrc') {
+        iframe.src = currentVideoData.vidsrcUrl;
+        serverIndicator.textContent = 'VidSrc';
+      } else {
+        iframe.src = currentVideoData.embedUrl;
+        serverIndicator.textContent = '2Embed';
+      }
+
+      // Visual feedback
+      const serverBtn = document.querySelector('.server-btn');
+      serverBtn.style.background = 'rgba(124, 58, 237, 0.8)';
+      setTimeout(() => {
+        serverBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+      }, 300);
+    }
+
+    function refreshPlayer() {
+      const iframe = document.getElementById('iframe');
+      const currentSrc = iframe.src;
+      iframe.src = '';
+      setTimeout(() => {
+        iframe.src = currentSrc;
+      }, 100);
+
+      // Visual feedback
+      const refreshBtn = document.querySelector('.refresh-btn');
+      refreshBtn.style.background = 'rgba(124, 58, 237, 0.8)';
+      setTimeout(() => {
+        refreshBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+      }, 300);
+    }
+
+    function toggleFullscreen() {
+      const playerContainer = document.querySelector('.player-container');
+      const iframe = document.getElementById('iframe');
+
+      if (!document.fullscreenElement) {
+        // Enter fullscreen
+        if (playerContainer.requestFullscreen) {
+          playerContainer.requestFullscreen();
+        } else if (playerContainer.webkitRequestFullscreen) {
+          playerContainer.webkitRequestFullscreen();
+        } else if (playerContainer.msRequestFullscreen) {
+          playerContainer.msRequestFullscreen();
+        }
+
+        // Adjust iframe for fullscreen
+        iframe.style.height = '100vh';
+        iframe.style.borderRadius = '0';
+      } else {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      }
+
+      // Visual feedback
+      const fullscreenBtn = document.querySelector('.fullscreen-btn');
+      fullscreenBtn.style.background = 'rgba(124, 58, 237, 0.8)';
+      setTimeout(() => {
+        fullscreenBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+      }, 300);
+    }
+
+    // Handle fullscreen change
+    document.addEventListener('fullscreenchange', function() {
+      const iframe = document.getElementById('iframe');
+      if (!document.fullscreenElement) {
+        iframe.style.height = '340px';
+        iframe.style.borderRadius = '12px';
+      }
+    });
+
+    // Store video data for server switching
+    function storeVideoData(vidsrcUrl, embedUrl) {
+      currentVideoData = {
+        vidsrcUrl: vidsrcUrl,
+        embedUrl: embedUrl
+      };
+    }
+
     // Prevent any auto-scroll to top on SPA navigation or search
     window.scrollTo = function(){};
     // If any code tries to scroll to top, this disables it globally
